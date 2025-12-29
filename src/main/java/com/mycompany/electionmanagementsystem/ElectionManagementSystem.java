@@ -14,6 +14,6 @@ public class ElectionManagementSystem {
         System.out.println("Hello There!");
         System.out.println("Hello Here!");
         System.out.println("Hello There!");
-        System.out.println("Najib first output command is here!");
+        System.out.println("Najib second output command is here!");
     }
 }
