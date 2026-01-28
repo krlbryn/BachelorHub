@@ -25,21 +25,31 @@
         <main>
             <div class="login-card">
                 <h2>Log In</h2>
+                <%
+                    String errorMessage = (String) request.getAttribute("errMessage");
+                    if (errorMessage != null) {
+                %>
+                <div class="error-container">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <%= errorMessage%>
+                </div>
+                <% }%>
                 <form action="LoginServlet" method="post">
-                    <div class="input-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                        <i class="fa-solid fa-eye-slash toggle-password"></i>
-                    </div>
-                    <button type="submit" class="login-btn">Log In</button>
-                    <div class="signup-text">
-                        or <a href="signup.jsp" style="color: #333; text-decoration: underline;">Sign up</a>
-                    </div>
-                </form>
+                    <form action="LoginServlet" method="post">
+                        <div class="input-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                            <i class="fa-solid fa-eye-slash toggle-password"></i>
+                        </div>
+                        <button type="submit" class="login-btn">Log In</button>
+                        <div class="signup-text">
+                            or <a href="signup.jsp" style="color: #333; text-decoration: underline;">Sign up</a>
+                        </div>
+                    </form>
             </div>
             <div class="footer-line"></div>
             <div class="bottom-logo">🧠</div>
