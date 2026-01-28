@@ -8,7 +8,6 @@ package com.mvc.controller;
  *
  * @author ParaNon
  */
-
 import com.mvc.bean.LoginBean;
 import com.mvc.dao.LoginDao;
 import java.io.IOException;
