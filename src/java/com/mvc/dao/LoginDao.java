@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  *
  * @author ParaNon
  */
 package com.mvc.dao;
+
 import com.mvc.bean.LoginBean;
 import com.mvc.util.DBConnection;
 import java.sql.Connection;
@@ -18,46 +18,42 @@ import java.sql.SQLException;
 
 public class LoginDao {
 
-    public String authenticateUser(LoginBean loginBean) {
-        String usernameEntered = loginBean.getUsername(); // This gets the input from the login box
+    public String authenticateUser(LoginBean loginBean, String role) {
+        String usernameEntered = loginBean.getUsername();
         String passwordEntered = loginBean.getPassword();
 
         Connection con = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        String usernameDB = "";
-        String passwordDB = "";
-
-        // ==========================================
-        //  UPDATED QUERY: Check 'admin_username'
-        // ==========================================
-        String sqlQuery = "SELECT admin_username, admin_Password FROM admin WHERE admin_username = ? AND admin_Password = ?";
-
         try {
             con = DBConnection.createConnection();
-            preparedStatement = con.prepareStatement(sqlQuery);
+            String sqlQuery = "";
 
-            // 1. Fill in the ? with the data from the login page
+            // === CHOOSE TABLE BASED ON ROLE ===
+            if (role.equals("admin")) {
+                // Admin Table
+                sqlQuery = "SELECT admin_username, admin_Password FROM admin WHERE admin_username = ? AND admin_Password = ?";
+            } else {
+                // Student Table (Using stud_ID)
+                sqlQuery = "SELECT stud_ID, stu_Password FROM student WHERE stud_ID = ? AND stu_Password = ?";
+            }
+
+            preparedStatement = con.prepareStatement(sqlQuery);
             preparedStatement.setString(1, usernameEntered);
             preparedStatement.setString(2, passwordEntered);
 
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                // Get the data from the database column
-                usernameDB = resultSet.getString("admin_username");
-                passwordDB = resultSet.getString("admin_Password");
-
-                if (usernameEntered.equals(usernameDB) && passwordEntered.equals(passwordDB)) {
-                    return "SUCCESS";
-                }
+                // Simple verify
+                return "SUCCESS";
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return "Invalid user credentials";
+        return "Invalid credentials";
     }
 }

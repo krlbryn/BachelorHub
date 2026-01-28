@@ -26,32 +26,41 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Get the data from the login.jsp form
         String usernameEntered = request.getParameter("username");
         String passwordEntered = request.getParameter("password");
 
-        // 2. Put the data into the Bean
+        // 1. GET THE HIDDEN ROLE FROM JSP
+        String role = request.getParameter("role");
+
         LoginBean loginBean = new LoginBean();
         loginBean.setUsername(usernameEntered);
         loginBean.setPassword(passwordEntered);
 
-        // 3. Ask the DAO to check the database
         LoginDao loginDao = new LoginDao();
-        String userValidate = loginDao.authenticateUser(loginBean);
 
-        // 4. Check the result and redirect
-        if (userValidate.equals("SUCCESS")) {
-            // LOGIN SUCCESS: Create a session and go to the dashboard
+        // 2. PASS THE ROLE TO DAO
+        String result = loginDao.authenticateUser(loginBean, role);
+
+        if (result.equals("SUCCESS")) {
             HttpSession session = request.getSession();
-            session.setAttribute("userSession", usernameEntered); // Save user name for later
-            
-            // Redirect to a success page (You need to create this page!)
-            request.getRequestDispatcher("/adminDashboard.jsp").forward(request, response);
-            
+            session.setAttribute("userSession", usernameEntered);
+            session.setAttribute("userRole", role);
+
+            // 3. REDIRECT BASED ON ROLE
+            if (role.equals("admin")) {
+                request.getRequestDispatcher("/adminDashboard.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/studentDashboard.jsp").forward(request, response);
+            }
+
         } else {
-            // LOGIN FAILED: Send them back to login.jsp with an error message
-            request.setAttribute("errMessage", userValidate);
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.setAttribute("errMessage", result);
+            // If login fails, keep them on the correct page type!
+            if (role.equals("admin")) {
+                request.getRequestDispatcher("/login.jsp?type=admin").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
         }
     }
 }
