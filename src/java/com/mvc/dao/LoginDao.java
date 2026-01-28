@@ -32,11 +32,11 @@ public class LoginDao {
 
             // === CHOOSE TABLE BASED ON ROLE ===
             if (role.equals("admin")) {
-                // Admin Table
+                // Admin Check
                 sqlQuery = "SELECT admin_username, admin_Password FROM admin WHERE admin_username = ? AND admin_Password = ?";
             } else {
-                // Student Table (Using stud_ID)
-                sqlQuery = "SELECT stud_ID, stu_Password FROM student WHERE stud_ID = ? AND stu_Password = ?";
+                // === UPDATED STUDENT CHECK (Using stu_Username) ===
+                sqlQuery = "SELECT stu_Username, stu_Password FROM student WHERE stu_Username = ? AND stu_Password = ?";
             }
 
             preparedStatement = con.prepareStatement(sqlQuery);
@@ -46,7 +46,7 @@ public class LoginDao {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                // Simple verify
+                // Success!
                 return "SUCCESS";
             }
 

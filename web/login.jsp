@@ -13,8 +13,9 @@
     // 2. Set Variables based on the mode
     String roleValue = isAdmin ? "admin" : "student";
     String pageTitle = isAdmin ? "Admin Login" : "Student Login";
-    String labelText = isAdmin ? "Username" : "Student ID";
-    String placeholderText = isAdmin ? "Enter Admin Username" : "Enter Student ID";
+    // Change "Student ID" to "Student Username"
+    String labelText = isAdmin ? "Username" : "Student Username";
+    String placeholderText = isAdmin ? "Enter Admin Username" : "Enter Student Username";
     
     // 3. The Toggle Link Logic
     String toggleLink = isAdmin ? "login.jsp" : "login.jsp?type=admin";
