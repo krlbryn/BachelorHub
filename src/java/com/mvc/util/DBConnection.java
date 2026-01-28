@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  *
  * @author ParaNon
@@ -17,12 +16,12 @@ public class DBConnection {
 
     public static Connection createConnection() {
         Connection con = null;
-        
+
         // ============================================
         // UPDATE THESE VALUES TO MATCH YOUR DATABASE
         // ============================================
         String dbName = "StudentElectionDB"; // Change this to your actual database name
-        String url = "jdbc:mysql://localhost:3306/StudentElectionDB?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
+        String url = "jdbc:mysql://localhost:3306/StudentElectionDB";
         String username = "root";           // Default XAMPP/MySQL username
         String password = "";               // Default XAMPP/MySQL password (leave empty if none)
 
@@ -33,9 +32,9 @@ public class DBConnection {
 
             // 2. Establish the connection
             con = DriverManager.getConnection(url, username, password);
-            
+
             // Optional: Print specific success message for debugging
-            if(con != null) {
+            if (con != null) {
                 System.out.println("Database connection established successfully!");
             }
 
@@ -48,5 +47,14 @@ public class DBConnection {
         }
 
         return con;
+    }
+
+    public static void main(String[] args) {
+        Connection testCon = createConnection();
+        if (testCon != null) {
+            System.out.println("SUCCESS! You are connected to the database.");
+        } else {
+            System.out.println("FAILURE! Could not connect.");
+        }
     }
 }
