@@ -12,6 +12,6 @@
     </head>
     <body>
         <h1>Welcome, ${userSession}!</h1>
-        <p>You have successfully logged in.</p>
+        <p>You have successfully logged in for admin.</p>
     </body>
 </html>
