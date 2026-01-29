@@ -1,0 +1,215 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 29 Jan 2026, 7:32:50 am
+    Author     : ParaNon
+*/
+
+/* adminDashboard.css */
+:root {
+    --primary-color: #0056b3;   /* Corporate Blue */
+    --primary-light: #e6f0fa;   /* Very light blue for active state */
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-grey: #f4f7f6;
+    --sidebar-width: 260px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-grey);
+    height: 100vh;
+    display: flex; /* This makes the sidebar and content sit side-by-side */
+    overflow: hidden; /* Prevents double scrollbars */
+}
+
+/* === SIDEBAR STYLES === */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    position: relative;
+}
+
+.brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px; /* Space below logo */
+    padding-left: 10px;
+}
+
+.brand i {
+    font-size: 24px;
+}
+
+.nav-links {
+    list-style: none;
+    flex: 1; /* Pushes the 'Sign Out' button to the bottom */
+}
+
+.nav-links li {
+    margin-bottom: 5px;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.nav-links a:hover {
+    background-color: var(--bg-grey);
+    color: var(--primary-color);
+}
+
+/* Active Page Style */
+.nav-links a.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Sign Out Button (at the bottom) */
+.logout-section {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #d9534f; /* Red for logout */
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.logout-link:hover {
+    background-color: #fff5f5;
+}
+
+/* === MAIN CONTENT AREA === */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto; /* Allows scrolling inside the main area only */
+}
+
+.header-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.header-subtitle {
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+/* === LOGOUT MODAL STYLES === */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+    z-index: 1000; /* Sit on top of everything */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px); /* Optional: blur background slightly */
+}
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.modal-text {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-confirm {
+    background-color: #d9534f; /* Red for danger action */
+    color: white;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.btn-confirm:hover {
+    background-color: #c9302c;
+}
+
+.btn-cancel {
+    background-color: #e2e6ea;
+    color: var(--text-dark);
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #dbe0e5;
+}
+
+/* Animation for smooth pop-up */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

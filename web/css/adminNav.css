@@ -1,0 +1,107 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 29 Jan 2026, 8:12:53 am
+    Author     : ParaNon
+*/
+/* adminNav.css - Sidebar Styles Only */
+
+/* Duplicate root variables needed for the nav if used standalone, 
+   or relies on adminDashboard.css being present. */
+:root {
+    --primary-color: #0056b3;
+    --primary-light: #e6f0fa;
+    --text-light: #666;
+    --sidebar-width: 260px;
+}
+
+/* === SIDEBAR CONTAINER === */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    position: relative;
+    overflow-y: auto; /* Allow scroll if screen is short */
+}
+
+/* === BRAND / LOGO === */
+.brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    padding-left: 10px;
+}
+
+.brand i {
+    font-size: 24px;
+}
+
+/* === NAVIGATION LINKS === */
+.nav-links {
+    list-style: none;
+    /* Removed flex: 1 to prevent layout issues */
+    margin-bottom: 20px;
+}
+
+.nav-links li {
+    margin-bottom: 5px;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.nav-links a:hover {
+    background-color: #f4f7f6; /* Hardcoded bg-grey matches main theme */
+    color: var(--primary-color);
+}
+
+/* Active Page Style */
+.nav-links a.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* === SIGN OUT SECTION === */
+.logout-section {
+    margin-top: auto; /* Pushes button to bottom */
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #d9534f; /* Red for logout */
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.logout-link:hover {
+    background-color: #fff5f5;
+}
