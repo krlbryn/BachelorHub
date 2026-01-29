@@ -35,15 +35,21 @@
             name = rs.getString("admin_Name");
             email = rs.getString("admin_Email");
             id = rs.getString("admin_ID");
-            
+
             // Handle optional columns
             String dbPhone = rs.getString("admin_Phone");
             String dbAddress = rs.getString("admin_Address");
             String dbImage = rs.getString("admin_Image"); // Fetch image column
 
-            if(dbPhone != null && !dbPhone.isEmpty()) phone = dbPhone;
-            if(dbAddress != null && !dbAddress.isEmpty()) address = dbAddress;
-            if(dbImage != null && !dbImage.isEmpty()) profileImage = dbImage;
+            if (dbPhone != null && !dbPhone.isEmpty()) {
+                phone = dbPhone;
+            }
+            if (dbAddress != null && !dbAddress.isEmpty()) {
+                address = dbAddress;
+            }
+            if (dbImage != null && !dbImage.isEmpty()) {
+                profileImage = dbImage;
+            }
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -51,85 +57,115 @@
 %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminDashboard.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminProfile.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Profile</title>
 
-    <jsp:include page="adminNav.jsp" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <main class="main-content">
-        <h1 class="header-title">My Profile</h1>
-        <p class="header-subtitle">Manage your account settings</p>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminDashboard.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminProfile.css">
+        <style>
+            /* Add this for the green success box */
+            .success-msg {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                padding: 15px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 500;
+            }
+        </style>
+    </head>
+    <body>
 
-        <div class="profile-container">
-            <div class="decoration-line"></div>
+        <jsp:include page="adminNav.jsp" />
 
-            <div class="profile-header">
-                
-                <% if (profileImage != null) { %>
-                    <img src="images/<%= profileImage %>" class="profile-avatar-img" alt="Profile Picture">
-                <% } else { %>
+        <main class="main-content">
+            <h1 class="header-title">My Profile</h1>
+            <p class="header-subtitle">Manage your account settings</p>
+
+            <div class="profile-container">
+                <div class="decoration-line"></div>
+                <%
+                    String status = request.getParameter("status");
+                    if (status != null) {
+                %>
+                <div class="success-msg">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <%
+                        if (status.equals("updated")) {
+                            out.print("Profile details updated successfully!");
+                        } else if (status.equals("password_changed")) {
+                            out.print("Password changed successfully!");
+                        }
+                    %>
+                </div>
+                <% } %>
+
+                <div class="profile-header">
+
+                    <% if (profileImage != null) {%>
+                    <img src="images/<%= profileImage%>" class="profile-avatar-img" alt="Profile Picture">
+                    <% } else { %>
                     <div class="profile-avatar">
                         <i class="fa-solid fa-user"></i>
                     </div>
-                <% } %>
-                
-                <div class="profile-title">
-                    <h2><%= name %></h2>
-                    <p>Admin ID : <%= id %></p>
-                    <span class="status-badge">Status : Active</span>
-                </div>
-            </div>
+                    <% }%>
 
-            <div class="divider"></div>
-
-            <div class="info-section">
-                <h3 class="section-title">Account Information :</h3>
-                <div class="info-grid">
-                    <div class="info-row">
-                        <span class="label">Username :</span>
-                        <span class="value"><%= userSession %></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Phone Number :</span>
-                        <span class="value"><%= phone %></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Email :</span>
-                        <span class="value"><%= email %></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Address :</span>
-                        <span class="value"><%= address %></span>
+                    <div class="profile-title">
+                        <h2><%= name%></h2>
+                        <p>Admin ID : <%= id%></p>
+                        <span class="status-badge">Status : Active</span>
                     </div>
                 </div>
+
+                <div class="divider"></div>
+
+                <div class="info-section">
+                    <h3 class="section-title">Account Information :</h3>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="label">Username :</span>
+                            <span class="value"><%= userSession%></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Phone Number :</span>
+                            <span class="value"><%= phone%></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Email :</span>
+                            <span class="value"><%= email%></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Address :</span>
+                            <span class="value"><%= address%></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="info-section">
+                    <h3 class="section-title">Account Setting :</h3>
+                    <a href="adminUpdateProfile.jsp" class="action-link">
+                        <span class="link-text">Update profile</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                    <a href="adminChangePassword.jsp" class="action-link">
+                        <span class="link-text">Change Password</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+
             </div>
+        </main>
 
-            <div class="divider"></div>
-
-            <div class="info-section">
-                <h3 class="section-title">Account Setting :</h3>
-                <a href="#" class="action-link">
-                    <span class="link-text">Update profile</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
-                <a href="#" class="action-link">
-                    <span class="link-text">Change Password</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
-            </div>
-
-        </div>
-    </main>
-
-</body>
+    </body>
 </html>
