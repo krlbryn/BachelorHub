@@ -32,7 +32,7 @@
             </a>
         </li>
         <li>
-            <a href="#"> <i class="fa-solid fa-person-booth"></i>
+            <a href="adminVotePage.jsp"> <i class="fa-solid fa-person-booth"></i>
                 <span>Voting Page</span>
             </a>
         </li>
