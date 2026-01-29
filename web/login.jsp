@@ -17,7 +17,7 @@
     String placeholderText = isAdmin ? "Enter Admin Username" : "Enter Student Username";
 
     String toggleLink = isAdmin ? "login.jsp" : "login.jsp?type=admin";
-    String toggleText = isAdmin ? "Not an admin? Go back home" : "An admin? Click here";
+    String toggleText = isAdmin ? "Not an admin? Click Here" : "An admin? Click here";
 
     // 2. Check for Error Message
     String errorMessage = (String) request.getAttribute("errMessage");
