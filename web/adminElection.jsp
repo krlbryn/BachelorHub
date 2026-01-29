@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminDashboard.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminHeader.css">
     
     <style>
         /* --- DASHBOARD SPECIFIC STYLES --- */
@@ -102,104 +103,90 @@
     <jsp:include page="adminNav.jsp" />
 
     <main class="main-content">
-        <div class="top-bar">
-            <div>
-                <h1 style="margin:0;">Manage Elections</h1>
-                <p style="color:#666; margin-top:5px;">Create and monitor election events</p>
-            </div>
-            <button onclick="openModal()" class="btn-create">
-                <i class="fa-solid fa-plus"></i> New Election
-            </button>
-        </div>
+
+    <div class="top-header">
+        <h1 class="header-title">Manage Elections</h1>
+        <div class="header-info">Create, monitor, and update election events</div>
+    </div>
+
+
+    <div class="action-bar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#fff; padding:15px 20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
         
-        <% if("success".equals(msg)) { %>
-            <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #c3e6cb;">
-                <i class="fa-solid fa-check-circle"></i> Election created successfully!
-            </div>
-        <% } else if("deleted".equals(msg)) { %>
-            <div style="background:#f8d7da; color:#721c24; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #f5c6cb;">
-                <i class="fa-solid fa-trash-can"></i> Election deleted successfully!
-            </div>
-        <% } else if("updated".equals(msg)) { %>
-            <div style="background:#cce5ff; color:#004085; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #b8daff;">
-                <i class="fa-solid fa-pen-to-square"></i> Election details updated successfully!
-            </div>
-        <% } %>
+        <div style="font-weight:600; color:#555; font-size:1.1rem;">
+            <i class="fa-solid fa-list-ul" style="margin-right:8px; color:#007bff;"></i> Elections List
+        </div>
 
-        <table class="election-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Election Title</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                    try {
-                        Connection con = DBConnection.createConnection();
-                        String sql = "SELECT * FROM election ORDER BY election_ID DESC";
-                        Statement st = con.createStatement();
-                        ResultSet rs = st.executeQuery(sql);
+        <button onclick="openModal()" class="btn-create">
+            <i class="fa-solid fa-plus"></i> New Election
+        </button>
+    </div>
 
-                        while(rs.next()) {
-                            // 1. RAW ID (Used for Links)
-                            String rawId = rs.getString("election_ID");
-                            
-                            // 2. DISPLAY ID (Formatted to E01, E02...)
-                            int idNum = Integer.parseInt(rawId);
-                            String displayID = String.format("E%02d", idNum);
 
-                            // 3. Election Details
-                            String eName = rs.getString("election_Title"); 
-                            String sDate = rs.getString("election_StartDate");
-                            String eDate = rs.getString("election_EndDate");
-                            String eStatus = rs.getString("election_Status");
-                            String eImg = rs.getString("election_Image");
-                            
-                            // 4. Data Cleanup (Trim Time & Null Check)
-                            if(sDate != null && sDate.length() > 10) sDate = sDate.substring(0, 10);
-                            if(eDate != null && eDate.length() > 10) eDate = eDate.substring(0, 10);
-                            if(eImg == null || eImg.isEmpty()) eImg = "default_election.jpg";
-                            
-                            // 5. Status Badge Color
-                            String statusClass = "closed";
-                            if(eStatus != null) {
-                                if(eStatus.equalsIgnoreCase("Active")) statusClass = "active";
-                                else if(eStatus.equalsIgnoreCase("Upcoming")) statusClass = "upcoming";
-                            }
-                %>
-                <tr>
-                    <td><strong><%= displayID %></strong></td>
-                    
-                    <td>
-                        <img src="images/<%= eImg %>" class="table-img" alt="Icon">
-                    </td>
-                    
-                    <td><strong><%= eName %></strong></td>
-                    <td><%= sDate %></td>
-                    <td><%= eDate %></td>
-                    
-                    <td><span class="status <%= statusClass %>"><%= eStatus %></span></td>
-                    
-                    <td>
-                        <a href="adminViewCandidates.jsp?eid=<%= rawId %>" class="action-btn btn-view" title="View Candidates"><i class="fa-solid fa-users"></i></a>
-                        <a href="adminEditElection.jsp?eid=<%= rawId %>" class="action-btn btn-edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
-                        <a href="adminDeleteElection.jsp?eid=<%= rawId %>" class="action-btn btn-delete" onclick="return confirm('Delete this election?')" title="Delete"><i class="fa-solid fa-trash"></i></a>
-                    </td>
-                </tr>
-                <%
-                        }
-                        con.close();
-                    } catch (Exception e) { e.printStackTrace(); }
-                %>
-            </tbody>
-        </table>
-    </main>
+    <% if("success".equals(msg)) { %>
+        <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #c3e6cb;">
+            <i class="fa-solid fa-check-circle"></i> Action completed successfully!
+        </div>
+    <% } %>
+
+    <table class="election-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Election Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                try {
+                    Connection con = DBConnection.createConnection();
+                    String sql = "SELECT * FROM election ORDER BY election_ID DESC";
+                    Statement st = con.createStatement();
+                    ResultSet rs = st.executeQuery(sql);
+
+                    while(rs.next()) {
+                        String rawId = rs.getString("election_ID");
+                        int idNum = Integer.parseInt(rawId);
+                        String displayID = String.format("E%02d", idNum);
+                        
+                        // ... (Rest of your existing loop code) ...
+                        String eName = rs.getString("election_Title");
+                        String eStatus = rs.getString("election_Status");
+                        String sDate = rs.getString("election_StartDate");
+                        String eDate = rs.getString("election_EndDate");
+                        String eImg = rs.getString("election_Image");
+                        if(eImg == null || eImg.isEmpty()) eImg = "default_election.jpg";
+                        
+                        String statusClass = "closed";
+                        if(eStatus != null && eStatus.equalsIgnoreCase("Active")) statusClass = "active";
+                        else if(eStatus != null && eStatus.equalsIgnoreCase("Upcoming")) statusClass = "upcoming";
+            %>
+            <tr>
+                <td><strong><%= displayID %></strong></td>
+                <td><img src="images/<%= eImg %>" class="table-img" alt="Icon"></td>
+                <td><strong><%= eName %></strong></td>
+                <td><%= sDate %></td>
+                <td><%= eDate %></td>
+                <td><span class="status <%= statusClass %>"><%= eStatus %></span></td>
+                <td>
+                    <a href="adminViewCandidates.jsp?eid=<%= rawId %>" class="action-btn btn-view"><i class="fa-solid fa-users"></i></a>
+                    <a href="adminEditElection.jsp?eid=<%= rawId %>" class="action-btn btn-edit"><i class="fa-solid fa-pen"></i></a>
+                    <a href="adminDeleteElection.jsp?eid=<%= rawId %>" class="action-btn btn-delete" onclick="return confirm('Delete?')"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+            <%
+                    }
+                    con.close();
+                } catch (Exception e) { e.printStackTrace(); }
+            %>
+        </tbody>
+    </table>
+
+</main>
 
     <div id="createModal" class="modal-overlay">
         <div class="modal-content">

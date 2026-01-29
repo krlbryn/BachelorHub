@@ -6,6 +6,16 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%
+    // Helper logic to highlight the active menu item automatically
+    String currentPage = request.getRequestURI();
+    boolean isDashboard = currentPage.contains("adminDashboard.jsp");
+    boolean isElection = currentPage.contains("adminElection.jsp");
+    boolean isCandidates = currentPage.contains("adminViewCandidates.jsp"); // Highlights for Candidate page
+    boolean isVotePage = currentPage.contains("adminVotePage.jsp");
+    boolean isProfile = currentPage.contains("adminProfile.jsp");
+%>
+
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminNav.css">
 
 <nav class="sidebar">
@@ -16,34 +26,38 @@
 
     <ul class="nav-links">
         <li>
-            <a href="adminDashboard.jsp" class="active">
+            <a href="adminDashboard.jsp" class="<%= isDashboard ? "active" : "" %>">
                 <i class="fa-solid fa-table-columns"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li>
-           <a href="adminElection.jsp" class="nav-link">
-    <i class="fa-solid fa-square-poll-vertical"></i>
-    <span class="link-text">Manage Elections</span>
-          </a>
+            <a href="adminElection.jsp" class="<%= isElection ? "active" : "" %>">
+                <i class="fa-solid fa-square-poll-vertical"></i>
+                <span>Manage Elections</span>
+            </a>
         </li>
         <li>
-            <a href="#"> <i class="fa-solid fa-users-gear"></i>
+            <a href="adminViewCandidates.jsp" class="<%= isCandidates ? "active" : "" %>">
+                <i class="fa-solid fa-users-gear"></i>
                 <span>Manage Candidates</span>
             </a>
         </li>
         <li>
-            <a href="adminVotePage.jsp"> <i class="fa-solid fa-person-booth"></i>
+            <a href="adminVotePage.jsp" class="<%= isVotePage ? "active" : "" %>">
+                <i class="fa-solid fa-person-booth"></i>
                 <span>Voting Page</span>
             </a>
         </li>
         <li>
-            <a href="#"> <i class="fa-solid fa-chart-pie"></i>
+            <a href="#"> 
+                <i class="fa-solid fa-chart-pie"></i>
                 <span>Voting Results</span>
             </a>
         </li>
         <li>
-            <a href="adminProfile.jsp"> <i class="fa-solid fa-user-tie"></i>
+            <a href="adminProfile.jsp" class="<%= isProfile ? "active" : "" %>">
+                <i class="fa-solid fa-user-tie"></i>
                 <span>My Profile</span>
             </a>
         </li>
