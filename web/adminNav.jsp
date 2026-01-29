@@ -42,7 +42,7 @@
             </a>
         </li>
         <li>
-            <a href="#"> <i class="fa-solid fa-user-tie"></i>
+            <a href="adminProfile.jsp"> <i class="fa-solid fa-user-tie"></i>
                 <span>My Profile</span>
             </a>
         </li>
