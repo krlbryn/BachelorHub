@@ -105,3 +105,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .logout-link:hover {
     background-color: #fff5f5;
 }
+
+.nav-links li a.active {
+    background-color: #e7f1ff; /* Light Blue Background */
+    color: #0d6efd;            /* Dark Blue Text */
+    font-weight: 600;
+}
