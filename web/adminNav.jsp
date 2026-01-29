@@ -1,7 +1,7 @@
 <%-- 
     Document   : adminNav
     Created on : 29 Jan 2026, 8:15:27 am
-    Author     : ParaNon
+    Author     : Karl
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,9 +22,10 @@
             </a>
         </li>
         <li>
-            <a href="#"> <i class="fa-solid fa-calendar-check"></i>
-                <span>Manage Elections</span>
-            </a>
+           <a href="adminElection.jsp" class="nav-link">
+    <i class="fa-solid fa-square-poll-vertical"></i>
+    <span class="link-text">Manage Elections</span>
+          </a>
         </li>
         <li>
             <a href="#"> <i class="fa-solid fa-users-gear"></i>
