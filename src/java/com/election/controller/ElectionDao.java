@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.election.controller;
+package com.mvc.dao;
 
 import com.mvc.bean.ElectionBean;
 import com.mvc.util.DBConnection;
@@ -12,10 +12,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Antigravity
- */
 public class ElectionDao {
 
     public List<ElectionBean> getAllElections() {
