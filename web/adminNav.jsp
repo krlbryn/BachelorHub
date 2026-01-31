@@ -32,7 +32,7 @@
             </a>
         </li>
         <li>
-            <a href="adminCandidate.jsp" class="<%= (pageName.equals("adminCandidate.jsp") || pageName.equals("adminAddCandidate.jsp")) ? "active" : "" %>">
+            <a href="adminViewCandidates.jsp" class="<%= (pageName.equals("adminCandidate.jsp") || pageName.equals("adminAddCandidate.jsp")) ? "active" : "" %>">
                 <i class="fa-solid fa-users-gear"></i>
                 <span>Manage Candidates</span>
             </a>
@@ -86,10 +86,18 @@
 </div>
 
 <script>
-    function confirmLogout() {
+    function openLogoutModal() {
         document.getElementById('logoutModal').style.display = 'flex';
     }
-    function closeModal() {
+
+    function closeLogoutModal() {
         document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        var modal = document.getElementById('logoutModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 </script>
