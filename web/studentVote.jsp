@@ -1,18 +1,12 @@
-<%-- Document : studentVote Created on : 29 Jan 2026 Author : Antigravity --%>
-
-<%@page import="java.text.SimpleDateFormat" %>
-<%@page import="java.util.List" %>
-<%@page import="com.mvc.bean.ElectionBean" %>
-<%@page import="com.mvc.dao.ElectionDao" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page import="java.text.SimpleDateFormat, java.util.List, com.mvc.bean.ElectionBean, com.mvc.dao.ElectionDao" %>
 <% String userSession = (String) session.getAttribute("userSession");
     if (userSession == null) {
         response.sendRedirect("login.jsp");
         return;
-    } // Fetch Elections ElectionDao electionDao=new
-    ElectionDao(); // Using getAllElections to ensure data visibility during development.
+    }
+    com.mvc.dao.ElectionDao electionDao = new com.mvc.dao.ElectionDao();
     List<ElectionBean> electionList = electionDao.getAllElections();
-
     SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy");
 %>
 <!DOCTYPE html>
@@ -26,8 +20,7 @@
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap"
             rel="stylesheet">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/studentDashboard.css">
@@ -76,10 +69,6 @@
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Sign Out</span>
                 </a>
-                <div
-                    style="margin-top: 20px; padding-left: 15px; color: #666; font-size: 14px; cursor: pointer;">
-                    <span>Help</span>
-                </div>
             </div>
         </div>
 
@@ -87,7 +76,6 @@
         <div class="main-content">
             <div class="header">
                 <h1 class="welcome-text">Select Election</h1>
-                <div class="logo-circle">Logo</div>
             </div>
 
             <div class="content-body">
@@ -102,11 +90,12 @@
                 <div class="elections-grid">
 
                     <% if (electionList != null && !electionList.isEmpty()) {
-                            for (ElectionBean election : electionList) {
+                            for (ElectionBean election
+                                    : electionList) {
                                 String startDate = (election.getElectionStartDate() != null)
                                         ? sdf.format(election.getElectionStartDate()) : "TBA";
                                 String endDate = (election.getElectionEndDate() != null)
-                                                                ? sdf.format(election.getElectionEndDate()) : "TBA";%>
+                                                ? sdf.format(election.getElectionEndDate()) : "TBA";%>
 
                     <!-- Dynamic Card -->
                     <div class="election-card">
@@ -136,9 +125,8 @@
                     </div>
 
                     <% }
-                                                } else { %>
-                    <div
-                        style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
+                                } else { %>
+                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
                         <h3>No active elections found at the moment.</h3>
                     </div>
                     <% }%>

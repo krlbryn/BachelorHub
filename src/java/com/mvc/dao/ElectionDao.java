@@ -27,6 +27,7 @@ public class ElectionDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
+            // SQL to get all elections
             String sql = "SELECT * FROM election ORDER BY election_ID DESC";
             resultSet = statement.executeQuery(sql);
 
@@ -38,7 +39,10 @@ public class ElectionDao {
                 election.setElectionStartDate(resultSet.getTimestamp("election_StartDate"));
                 election.setElectionEndDate(resultSet.getTimestamp("election_EndDate"));
                 election.setElectionStatus(resultSet.getString("election_Status"));
-                election.setStudId(resultSet.getInt("stud_ID"));
+                
+                // --- FIXED: REMOVED stud_ID because it does not exist in the database ---
+                // election.setStudId(resultSet.getInt("stud_ID")); 
+                
                 election.setAdminId(resultSet.getInt("admin_ID"));
 
                 elections.add(election);
@@ -46,9 +50,6 @@ public class ElectionDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // In a real app, close resources here. 
-            // DBConnection.createConnection() opens a new one every time in this project's style?
-            // Ideally explicit close.
             try { if(resultSet!=null) resultSet.close(); } catch(Exception e){}
             try { if(statement!=null) statement.close(); } catch(Exception e){}
             try { if(con!=null) con.close(); } catch(Exception e){}
@@ -56,7 +57,6 @@ public class ElectionDao {
         return elections;
     }
     
-    // Assumption: 'Active' is the status string. Adjust if database uses different convention.
     public List<ElectionBean> getActiveElections() {
         List<ElectionBean> elections = new ArrayList<>();
         Connection con = null;
@@ -66,6 +66,7 @@ public class ElectionDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
+            // SQL to get ONLY active elections
             String sql = "SELECT * FROM election WHERE election_Status = 'Active' ORDER BY election_StartDate ASC";
             resultSet = statement.executeQuery(sql);
 
@@ -77,6 +78,8 @@ public class ElectionDao {
                 election.setElectionStartDate(resultSet.getTimestamp("election_StartDate"));
                 election.setElectionEndDate(resultSet.getTimestamp("election_EndDate"));
                 election.setElectionStatus(resultSet.getString("election_Status"));
+                
+                // Note: No stud_ID here either, which is correct
                 
                 elections.add(election);
             }

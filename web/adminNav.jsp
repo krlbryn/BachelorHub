@@ -4,13 +4,14 @@
     Author     : ParaNon
 --%>
 
-<%-- Document : adminNav --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     // 1. GET CURRENT PAGE NAME
     String uri = request.getRequestURI();
     String pageName = uri.substring(uri.lastIndexOf("/") + 1);
 %>
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminNav.css">
 
 <div class="sidebar">
     <div class="brand">
@@ -52,8 +53,7 @@
     </ul>
 
     <div class="logout-section">
-        
-        <ul class="nav-links" style="margin-bottom: 10px;">
+        <ul class="nav-links" style="margin-bottom: 0;">
             <li>
                 <a href="adminProfile.jsp" class="<%= (pageName.equals("adminProfile.jsp") || pageName.equals("adminUpdateProfile.jsp") || pageName.equals("adminChangePassword.jsp")) ? "active" : "" %>">
                     <i class="fa-solid fa-user-tie"></i>
@@ -62,7 +62,7 @@
             </li>
         </ul>
 
-        <a href="#" onclick="confirmLogout()" class="logout-link">
+        <a href="javascript:void(0);" onclick="openLogoutModal()" class="logout-link">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Sign Out</span>
         </a>
@@ -79,7 +79,7 @@
         <p class="modal-text">Are you sure you want to end your session?</p>
         
         <div class="modal-buttons">
-            <button onclick="closeModal()" class="btn-cancel">Cancel</button>
+            <button onclick="closeLogoutModal()" class="btn-cancel">Cancel</button>
             <a href="login.jsp" class="btn-confirm">Yes, Log Out</a>
         </div>
     </div>
@@ -94,6 +94,7 @@
         document.getElementById('logoutModal').style.display = 'none';
     }
 
+    // Close modal if clicking outside the box
     window.onclick = function (event) {
         var modal = document.getElementById('logoutModal');
         if (event.target == modal) {
