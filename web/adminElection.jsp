@@ -124,7 +124,27 @@
 
     <% if("success".equals(msg)) { %>
         <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #c3e6cb;">
-            <i class="fa-solid fa-check-circle"></i> Action completed successfully!
+            <i class="fa-solid fa-check-circle"></i> Election created successfully!
+        </div>
+    
+    <% } else if("deleted".equals(msg)) { %>
+        <div style="background:#f8d7da; color:#721c24; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #f5c6cb;">
+            <i class="fa-solid fa-trash-can"></i> Election deleted successfully.
+        </div>
+
+    <% } else if("constraint".equals(msg)) { %>
+        <div style="background:#fff3cd; color:#856404; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #ffeeba;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Error: Could not delete. Try clearing votes/candidates first.
+        </div>
+
+    <% } else if("error".equals(msg)) { %>
+        <div style="background:#f8d7da; color:#721c24; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #f5c6cb;">
+            <i class="fa-solid fa-circle-xmark"></i> An unexpected error occurred.
+        </div>
+        
+    <% } else if("updated".equals(msg)) { %>
+        <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border: 1px solid #c3e6cb;">
+            <i class="fa-solid fa-pen-to-square"></i> Election details updated successfully.
         </div>
     <% } %>
 
@@ -175,7 +195,7 @@
                 <td>
                     <a href="adminViewCandidates.jsp?eid=<%= rawId %>" class="action-btn btn-view"><i class="fa-solid fa-users"></i></a>
                     <a href="adminEditElection.jsp?eid=<%= rawId %>" class="action-btn btn-edit"><i class="fa-solid fa-pen"></i></a>
-                    <a href="adminDeleteElection.jsp?eid=<%= rawId %>" class="action-btn btn-delete" onclick="return confirm('Delete?')"><i class="fa-solid fa-trash"></i></a>
+                  <a href="AdminElectionDeleteServlet?eid=<%= rawId %>" class="action-btn btn-delete" onclick="return confirm('Are you sure you want to delete this election? This will remove all candidates and votes associated with it.')"><i class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>
             <%
@@ -228,36 +248,38 @@
                 </div>
 
                 <div class="row-split">
-                    <div class="col-half form-group">
-                        <label>Position Included :</label>
-                        <div class="checkbox-group">
-                            <%
-                                // Fetch Positions from Database for Checkboxes
-                                try {
-                                    Connection conPos = DBConnection.createConnection();
-                                    String sqlPos = "SELECT * FROM position"; 
-                                    Statement stPos = conPos.createStatement();
-                                    ResultSet rsPos = stPos.executeQuery(sqlPos);
-                                    while(rsPos.next()) {
-                                        String pName = rsPos.getString("position_Name"); 
-                            %>
-                                        <div class="checkbox-item">
-                                            <input type="checkbox" name="positions" value="<%= pName %>"> 
-                                            <%= pName %>
-                                        </div>
-                            <%
-                                    }
-                                    conPos.close();
-                                } catch (Exception e) { out.print("Error loading positions"); }
-                            %>
-                        </div>
-                    </div>
+    <div class="col-half form-group">
+        <label>Position Included :</label>
+        <div class="checkbox-group">
+            <%
+                // Fetch UNIQUE positions only
+                try {
+                    Connection conPos = DBConnection.createConnection();
+                    // FIX: Added DISTINCT to prevent duplicates (e.g., showing "President" twice)
+                    String sqlPos = "SELECT DISTINCT position_Name FROM position ORDER BY position_Name"; 
+                    Statement stPos = conPos.createStatement();
+                    ResultSet rsPos = stPos.executeQuery(sqlPos);
                     
-                    <div class="col-half form-group">
-                        <label>Upload Photo :</label>
-                        <input type="file" name="eImage" class="file-upload-box">
-                    </div>
-                </div>
+                    while(rsPos.next()) {
+                        String pName = rsPos.getString("position_Name"); 
+            %>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="positions" value="<%= pName %>"> 
+                            <%= pName %>
+                        </div>
+            <%
+                    }
+                    conPos.close();
+                } catch (Exception e) { out.print("Error loading positions"); }
+            %>
+        </div>
+    </div>
+    
+    <div class="col-half form-group">
+        <label>Upload Photo :</label>
+        <input type="file" name="eImage" class="file-upload-box">
+    </div>
+</div>
 
                 <div class="modal-footer">
                     <button type="submit" class="btn-save">SAVE</button>

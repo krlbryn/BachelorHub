@@ -1,7 +1,7 @@
 <%-- 
     Document   : adminEditElection
-    Created on : Jan 29, 2026, 11:28:17?PM
-    Author     : Karl
+    Updated on : Jan 31, 2026
+    Author     : Karl & Fixed Version
 --%>
 
 <%@page import="java.util.Arrays"%>
@@ -47,9 +47,13 @@
                 
                 // Convert string "President,VP" into a List for easy checking
                 if(positions != null && !positions.isEmpty()) {
-                    positionList = Arrays.asList(positions.split(","));
+                    // Trim spaces to ensure matching works
+                    String[] posArray = positions.split(",");
+                    for(int i=0; i<posArray.length; i++) posArray[i] = posArray[i].trim();
+                    positionList = Arrays.asList(posArray);
                 }
             }
+            con.close();
         } catch(Exception e) { e.printStackTrace(); }
     }
 %>
@@ -77,6 +81,7 @@
         .col-half { flex: 1; }
         
         .checkbox-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee; }
+        .checkbox-item { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
         
         .btn-update { background-color: #ffc107; color: black; padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
         .btn-update:hover { background-color: #e0a800; }
@@ -122,9 +127,9 @@
                 <div class="form-group">
                     <label>Status</label>
                     <select name="eStatus" class="form-control">
-                        <option value="Upcoming" <%= status.equals("Upcoming") ? "selected" : "" %>>Upcoming</option>
-                        <option value="Active" <%= status.equals("Active") ? "selected" : "" %>>Active</option>
-                        <option value="Closed" <%= status.equals("Closed") ? "selected" : "" %>>Closed</option>
+                        <option value="Upcoming" <%= "Upcoming".equals(status) ? "selected" : "" %>>Upcoming</option>
+                        <option value="Active" <%= "Active".equals(status) ? "selected" : "" %>>Active</option>
+                        <option value="Closed" <%= "Closed".equals(status) ? "selected" : "" %>>Closed</option>
                     </select>
                 </div>
 
@@ -132,19 +137,20 @@
                     <label>Positions Included:</label>
                     <div class="checkbox-group">
                         <%
-                            // Fetch all possible positions to display
+                            // Fetch UNIQUE positions to avoid duplicates in the checkbox list
                             try {
                                 Connection conPos = DBConnection.createConnection();
-                                String sqlPos = "SELECT * FROM position"; 
+                                // FIX: Use DISTINCT to show each position name only once
+                                String sqlPos = "SELECT DISTINCT position_Name FROM position ORDER BY position_Name"; 
                                 Statement stPos = conPos.createStatement();
                                 ResultSet rsPos = stPos.executeQuery(sqlPos);
 
                                 while(rsPos.next()) {
                                     String pName = rsPos.getString("position_Name");
-                                    // Check if this position was previously saved
+                                    // Check if this position is in the current election's list
                                     String checked = positionList.contains(pName) ? "checked" : "";
                         %>
-                                    <div>
+                                    <div class="checkbox-item">
                                         <input type="checkbox" name="positions" value="<%= pName %>" <%= checked %>> 
                                         <%= pName %>
                                     </div>
@@ -160,7 +166,7 @@
                     <div class="col-half form-group">
                         <label>Update Image (Optional)</label>
                         <input type="file" name="eImage" class="form-control">
-                        <small>Current file: <%= img %></small>
+                        <small style="color:#777;">Current file: <%= (img!=null && !img.isEmpty()) ? img : "None" %></small>
                     </div>
                     <div class="col-half" style="display:flex; justify-content:flex-end; align-items:flex-end; gap:10px;">
                         <a href="adminElection.jsp" class="btn-cancel">Cancel</a>
