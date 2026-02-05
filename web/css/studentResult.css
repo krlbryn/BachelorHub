@@ -1,0 +1,176 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 1 Feb 2026, 12:00:36 am
+    Author     : ParaNon
+*/
+
+/* studentResult.css - Refreshed UI */
+
+/* === ELECTION GRID (List Page) === */
+.elections-grid-result {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 10px;
+}
+
+.result-election-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.result-election-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.card-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+.status-active { background: #d1e7dd; color: #0f5132; }
+.status-ongoing { background: #fff3cd; color: #856404; }
+.status-ended, .status-closed { background: #e2e3e5; color: #41464b; }
+
+.card-icon-large {
+    font-size: 3rem;
+    color: #0d6efd;
+    margin: 20px 0;
+    opacity: 0.8;
+}
+
+.res-title {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.res-date {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* === BUTTONS === */
+.btn-res {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.btn-result-view {
+    background-color: #0d6efd;
+    color: white;
+}
+.btn-result-view:hover {
+    background-color: #0b5ed7;
+}
+
+.btn-result-disabled {
+    background-color: #f8f9fa;
+    color: #999;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents clicking */
+}
+
+/* === WINNER PAGE STYLES === */
+.winner-header-block {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 4px solid #ffc107;
+}
+
+.winner-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.winner-card-large {
+    background: white;
+    width: 260px;
+    border-radius: 15px;
+    padding: 0 0 20px 0; /* Top padding 0 for badge */
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: relative;
+    border: 2px solid #ffc107;
+    overflow: hidden;
+}
+
+.winner-position-badge {
+    background: #333;
+    color: #ffc107;
+    padding: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.crown-icon {
+    position: absolute;
+    top: 45px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: #ffc107;
+    transform: rotate(15deg);
+}
+
+.winner-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #ffc107;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.winner-name {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.winner-votes {
+    font-size: 0.9rem;
+    color: #666;
+}
+.winner-votes span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.no-data-msg {
+    text-align: center;
+    grid-column: 1/-1;
+    color: #666;
+    padding: 40px;
+}

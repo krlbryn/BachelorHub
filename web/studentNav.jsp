@@ -20,7 +20,7 @@
 
     <ul class="nav-links">
         <li>
-            <a href="studentDashboard.jsp" class="<%= pageName.equals("studentDashboard.jsp") ? "active" : ""%>">
+            <a href="studentDashboard" class="<%= pageName.equals("studentDashboard.jsp") ? "active" : ""%>">
                 <i class="fa-solid fa-border-all"></i>
                 <span>Dashboard</span>
             </a>
@@ -32,7 +32,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="<%= pageName.equals("studentResults.jsp") ? "active" : ""%>">
+            <a href="studentResult.jsp" class="<%= pageName.equals("studentResults.jsp") ? "active" : ""%>">
                 <i class="fa-solid fa-square-poll-vertical"></i>
                 <span>Voting Results</span>
             </a>
