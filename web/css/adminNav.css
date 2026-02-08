@@ -1,0 +1,222 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 29 Jan 2026, 8:12:53 am
+    Author     : ParaNon
+*/
+/* adminNav.css - Sidebar Styles Only */
+
+/* adminNav.css - Sidebar & Logout Modal Styles 
+   Updated to match Student Side (Neutral Colors)
+*/
+
+/* adminNav.css - Sidebar & Logout Modal Styles 
+   Updated to match Student Side (Neutral Colors)
+*/
+
+:root {
+    --primary-color: #0056b3;
+    --primary-light: #e6f0fa;
+    --text-light: #666;
+    --sidebar-width: 260px;
+}
+
+/* === SIDEBAR CONTAINER === */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
+}
+
+/* === BRAND / LOGO === */
+.brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    padding-left: 10px;
+}
+
+.brand i {
+    font-size: 24px;
+}
+
+/* === NAVIGATION LINKS === */
+.nav-links {
+    list-style: none;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.nav-links li {
+    margin-bottom: 5px;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.nav-links a:hover {
+    background-color: #f4f7f6;
+    color: var(--primary-color);
+}
+
+/* Active Page Style */
+.nav-links a.active {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* === SIGN OUT LINK (Updated to Neutral Style) === */
+.logout-section {
+    margin-top: auto;
+    border-top: 1px solid #eee;
+    padding-top: 5px; /* Tighter spacing */
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    /* CHANGED: Now uses standard grey, not Red */
+    color: var(--text-light); 
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* CHANGED: Hover is now standard grey/blue, not pink */
+.logout-link:hover {
+    background-color: #f4f7f6;
+    color: var(--primary-color);
+}
+
+/* Ensure icon changes color on hover too */
+.logout-link i {
+    transition: color 0.3s ease;
+}
+.logout-link:hover i {
+    color: var(--primary-color);
+}
+
+/* =========================================
+   LOGOUT MODAL STYLES (Pop-up Window)
+   ========================================= */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.modal-box {
+    background: white;
+    padding: 30px 40px;
+    width: 400px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-icon-wrapper {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.modal-icon-wrapper i {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.modal-text {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-cancel {
+    padding: 8px 20px;
+    border: 1px solid #333;
+    background: white;
+    color: #333;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fa;
+    border-color: #000;
+}
+
+.btn-confirm {
+    color: #0d6efd;
+    text-decoration: underline;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-confirm:hover {
+    color: #0a58ca;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

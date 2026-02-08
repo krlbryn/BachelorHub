@@ -1,0 +1,157 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 1 Feb 2026, 12:13:17 am
+    Author     : ParaNon
+*/
+
+/* studentVote.css - Styles for Election Selection Page */
+
+/* === PAGE LAYOUT === */
+.main-content {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.welcome-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.content-body {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* === SECTION HEADER & FILTERS === */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.filter-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    cursor: pointer;
+}
+
+/* === ELECTIONS GRID === */
+.elections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* === ELECTION CARD === */
+.election-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 25px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.election-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-dots {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 3px;
+    cursor: pointer;
+}
+
+.card-dots span {
+    width: 4px;
+    height: 4px;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+.card-image {
+    width: 50px;
+    height: 50px;
+    background-color: #f0f2f5;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.card-image i {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.image-label {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+.election-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* === DATE INFO === */
+.date-info {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.date-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* === VOTE BUTTON === */
+.btn-vote {
+    width: 100%;
+    padding: 12px;
+    background-color: #0d6efd; /* Blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-vote:hover {
+    background-color: #0b5ed7;
+}
+

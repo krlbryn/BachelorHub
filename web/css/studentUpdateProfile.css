@@ -1,0 +1,83 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 30 Jan 2026, 12:47:08 am
+    Author     : ParaNon
+*/
+
+/* --- studentUpdateProfile.css --- */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+/* Save Button */
+.btn-save {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+/* Cancel Button */
+.btn-cancel-link {
+    text-decoration: none; 
+    padding: 12px 25px; 
+    color: #555; 
+    border: 1px solid #ccc; 
+    border-radius: 6px;
+    background-color: white;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-cancel-link:hover {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Error Message Box */
+.error-msg {
+    background: #f8d7da; 
+    color: #721c24; 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
