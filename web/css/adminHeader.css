@@ -1,0 +1,36 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jan 30, 2026, 12:42:46 AM
+    Author     : user
+*/
+/* --- TOP HEADER BAR --- */
+/* --- CLEAN SEPARATOR HEADER --- */
+/* --- TITLE BAR HEADER (Purely Informational) --- */
+.top-header {
+    background-color: #ffffff;
+    padding: 25px 40px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 25px; /* Adds space between Header and Action Bar */
+    display: flex;
+    flex-direction: column; /* Stack Title and Breadcrumb vertically */
+    justify-content: center;
+}
+
+.header-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.header-info {
+    font-family: 'Roboto', sans-serif;
+    color: #777;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
