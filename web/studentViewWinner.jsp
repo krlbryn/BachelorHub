@@ -1,7 +1,7 @@
 <%-- 
     Document   : studentViewWinner
-    Created on : 1 Feb 2026, 1:08:14 am
-    Author     : ParaNon
+    Updated on : Feb 09, 2026
+    Description: Detailed Final Results with Winner Profiles (iVOTE Theme)
 --%>
 
 <%@page import="java.sql.*"%>
@@ -29,26 +29,137 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Election Winners - Final Results</title>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <title>Official Results | ElectVote</title>
+        
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/studentNav.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/studentHeader.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/studentDashboard.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/studentResult.css">
+
+        <style>
+            /* Winners Podium Aesthetics */
+            .winner-header-block {
+                background: white;
+                padding: 35px;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                border: 1px solid #E8EEF3;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .back-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: #1E56A0;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 14px;
+                margin-bottom: 20px;
+                transition: 0.2s;
+            }
+            .back-btn:hover { transform: translateX(-5px); color: #154585; }
+
+            .winner-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 30px;
+                padding-bottom: 50px;
+            }
+
+            .winner-card-premium {
+                background: #fff;
+                border-radius: 16px;
+                padding: 40px 30px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                border: 1px solid #E8EEF3;
+                text-align: center;
+                position: relative;
+                transition: 0.3s ease;
+                overflow: hidden;
+            }
+
+            .winner-card-premium:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 30px rgba(30, 86, 160, 0.12);
+                border-color: #ffc107;
+            }
+
+            /* Golden Crown Indicator */
+            .crown-badge {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                font-size: 24px;
+                color: #ffc107;
+                filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.3));
+            }
+
+            .winner-pos-tag {
+                background: #F4F7FE;
+                color: #1E56A0;
+                padding: 6px 16px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                display: inline-block;
+                margin-bottom: 25px;
+                letter-spacing: 0.5px;
+            }
+
+            .winner-avatar-frame {
+                width: 130px;
+                height: 130px;
+                border-radius: 12px; /* Standard Rounded Square */
+                margin: 0 auto 20px;
+                overflow: hidden;
+                border: 4px solid #fff;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                background: #F8F9FC;
+            }
+
+            .winner-avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+            .winner-avatar-frame i { font-size: 4rem; color: #cbd5e1; margin-top: 25px; }
+
+            .winner-name-text {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: #1a1a3d;
+                margin-bottom: 12px;
+            }
+
+            .vote-pill {
+                background: linear-gradient(135deg, #1E56A0 0%, #4A90E2 100%);
+                color: white;
+                padding: 10px 25px;
+                border-radius: 30px;
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 700;
+                box-shadow: 0 4px 15px rgba(30, 86, 160, 0.2);
+            }
+        </style>
     </head>
 
     <body>
         <jsp:include page="studentNav.jsp" />
 
         <div class="main-content">
+            
+            <jsp:include page="studentHeader.jsp" />
 
-            <div style="margin-bottom: 25px;">
-                <a href="studentResult.jsp" style="text-decoration: none; color: #0d6efd; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Result List
+            <div class="dashboard-container">
+                
+                <a href="studentResult.jsp" class="back-btn">
+                    <i class="fa-solid fa-chevron-left"></i> Back to Results
                 </a>
-            </div>
 
-            <div class="result-container">
                 <%
                     Connection con = null;
                     PreparedStatement pst = null;
@@ -57,36 +168,35 @@
                     try {
                         con = DBConnection.createConnection();
 
-                        // 1. Fetch Election Title from the election table
+                        // Fetch Election Title
                         String titleSQL = "SELECT election_Title FROM election WHERE election_ID = ?";
                         pst = con.prepareStatement(titleSQL);
                         pst.setInt(1, electionId);
                         rs = pst.executeQuery();
-                        String electionTitle = "Election Results";
-                        if (rs.next()) {
-                            electionTitle = rs.getString("election_Title");
-                        }
+                        String electionTitle = "Final Results";
+                        if (rs.next()) { electionTitle = rs.getString("election_Title"); }
                         rs.close();
                         pst.close();
                 %>
 
-                <div class="winner-header-block" style="text-align: center; margin-bottom: 40px; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    <h1 style="margin:0; color:#1a1a1a; font-family: 'Montserrat';"><i class="fa-solid fa-trophy" style="color:#ffc107;"></i> Official Results</h1>
-                    <h2 style="margin: 10px 0 0 0; color:#6c757d; font-size: 1.3rem; font-weight: 500;"><%= electionTitle%></h2>
+                <div class="winner-header-block">
+                    <h1 style="font-family: 'Montserrat'; font-weight: 700; color: #1E56A0; margin-bottom: 5px;">
+                        <i class="fa-solid fa-trophy" style="color:#ffc107; margin-right: 10px;"></i> Official Proclamation
+                    </h1>
+                    <p style="color: #8A92A6; font-size: 16px; font-weight: 500;"><%= electionTitle %></p>
                 </div>
 
                 <div class="winner-grid">
                     <%
-                        /* 2. Fetch Winners from electionresult table
-                               Joining with candidate and student tables to get display details */
+                        // Fetch Winners joined with candidate, student, and position tables
                         String sql = "SELECT er.totalVotes, c.cand_PhotoPath, s.stu_Name, p.position_Name "
-                                + "FROM electionresult er "
-                                + "JOIN candidate c ON er.cand_ID = c.cand_ID "
-                                + "JOIN student s ON c.stud_ID = s.stud_ID "
-                                + "JOIN position p ON er.position_ID = p.position_ID "
-                                + "WHERE er.election_ID = ? "
-                                + "AND er.totalVotes = (SELECT MAX(totalVotes) FROM electionresult WHERE position_ID = er.position_ID AND election_ID = ?) "
-                                + "ORDER BY p.position_ID ASC";
+                                   + "FROM electionresult er "
+                                   + "JOIN candidate c ON er.cand_ID = c.cand_ID "
+                                   + "JOIN student s ON c.stud_ID = s.stud_ID "
+                                   + "JOIN position p ON er.position_ID = p.position_ID "
+                                   + "WHERE er.election_ID = ? "
+                                   + "AND er.totalVotes = (SELECT MAX(totalVotes) FROM electionresult WHERE position_ID = er.position_ID AND election_ID = ?) "
+                                   + "ORDER BY p.position_ID ASC";
 
                         pst = con.prepareStatement(sql);
                         pst.setInt(1, electionId);
@@ -101,27 +211,23 @@
                             int votes = rs.getInt("totalVotes");
                             String photo = rs.getString("cand_PhotoPath");
                     %>
-                    <div class="winner-card-large">
-                        <div class="winner-position-badge"><%= posName%></div>
-                        <div class="crown-icon"><i class="fa-solid fa-crown" style="color: #ffc107;"></i></div>
+                    <div class="winner-card-premium">
+                        <div class="crown-badge"><i class="fa-solid fa-crown"></i></div>
+                        <div class="winner-pos-tag"><%= posName %></div>
 
-                        <div class="winner-img-container" style="width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                            <%-- Persistent Path Logic --%>
-                            <% if (photo != null && !photo.trim().isEmpty() && !photo.equals("default_user.png")) {%>
-                            <img src="${pageContext.request.contextPath}/images/<%= photo%>" 
-                                 class="winner-img" 
-                                 alt="Winner" 
-                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="winner-avatar-frame">
+                            <% if (photo != null && !photo.trim().isEmpty() && !photo.equals("default_user.png")) { %>
+                                <img src="${pageContext.request.contextPath}/images/<%= photo %>" alt="Winner Photo">
                             <% } else { %>
-                            <div style="width: 100%; height: 100%; background: #f0f2f5; display: flex; align-items: center; justify-content: center;">
-                                <i class="fa-solid fa-user" style="font-size: 5rem; color: #adb5bd;"></i>
-                            </div>
-                            <% }%>
+                                <i class="fa-solid fa-user"></i>
+                            <% } %>
                         </div>
 
-                        <h3 class="winner-name" style="font-family: 'Montserrat'; font-size: 1.4rem; color: #333; margin-bottom: 10px;"><%= sName%></h3>
-                        <div class="winner-votes" style="background: #e3f2fd; padding: 8px 20px; border-radius: 20px; display: inline-block; color: #0d47a1; font-weight: 700;">
-                            <span style="font-size: 1.2rem;"><%= votes%></span> Total Votes
+                        <h3 class="winner-name-text"><%= sName %></h3>
+                        
+                        <div class="vote-pill">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                            <span><%= votes %> <small style="font-weight: 400; opacity: 0.8; margin-left: 2px;">Total Votes</small></span>
                         </div>
                     </div>
                     <%
@@ -129,34 +235,19 @@
 
                         if (!hasResults) {
                     %>
-                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <i class="fa-solid fa-hourglass-half" style="font-size: 4rem; color: #ccc; margin-bottom: 15px;"></i>
-                        <h3 style="color: #888;">Results for this election have not been finalized yet.</h3>
+                    <div class="empty-state-text">
+                        <i class="fa-solid fa-hourglass-start" style="font-size: 3.5rem; color: #E8EEF3; margin-bottom: 20px; display: block;"></i>
+                        <h3 style="color: #1a1a3d; margin-bottom: 10px;">Results Pending</h3>
+                        <p>The official results for this election are still being verified by the administration.</p>
                     </div>
                     <%
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            out.println("<p style='color:red;'>Error loading results: " + e.getMessage() + "</p>");
                         } finally {
-                            try {
-                                if (rs != null) {
-                                    rs.close();
-                                }
-                            } catch (Exception e) {
-                            }
-                            try {
-                                if (pst != null) {
-                                    pst.close();
-                                }
-                            } catch (Exception e) {
-                            }
-                            try {
-                                if (con != null) {
-                                    con.close();
-                                }
-                            } catch (Exception e) {
-                            }
+                            try { if(rs!=null) rs.close(); } catch(Exception e){}
+                            try { if(pst!=null) pst.close(); } catch(Exception e){}
+                            try { if(con!=null) con.close(); } catch(Exception e){}
                         }
                     %>
                 </div>

@@ -1,22 +1,29 @@
 <%-- 
     Document   : adminNav
-    Created on : 29 Jan 2026, 8:15:27 am
-    Author     : ParaNon
+    Created on : 29 Jan 2026, 8:15:27 am
+    Author     : Karl
+    Updated    : Matches Royal Blue Theme
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    // 1. GET CURRENT PAGE NAME
+    // 1. GET CURRENT PAGE NAME (Logic Preserved)
     String uri = request.getRequestURI();
     String pageName = uri.substring(uri.lastIndexOf("/") + 1);
 %>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminNav.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div class="sidebar">
     <div class="brand">
-        <i class="fa-solid fa-check-to-slot"></i>
-        <span>Election Admin</span>
+        <div class="brand-icon">
+            <i class="fa-solid fa-check-to-slot"></i>
+        </div>
+        <div class="brand-text">
+            <span>ElectVote</span>
+            <span class="brand-sub">Admin Portal</span>
+        </div>
     </div>
 
     <ul class="nav-links">
@@ -52,8 +59,8 @@
         </li>
     </ul>
 
-    <div class="logout-section">
-        <ul class="nav-links" style="margin-bottom: 0;">
+    <div class="sidebar-footer">
+        <ul class="nav-links profile-link">
             <li>
                 <a href="adminProfile.jsp" class="<%= (pageName.equals("adminProfile.jsp") || pageName.equals("adminUpdateProfile.jsp") || pageName.equals("adminChangePassword.jsp")) ? "active" : "" %>">
                     <i class="fa-solid fa-user-tie"></i>
@@ -62,21 +69,23 @@
             </li>
         </ul>
 
-        <a href="javascript:void(0);" onclick="openLogoutModal()" class="logout-link">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Sign Out</span>
-        </a>
+        <div class="logout-wrapper">
+            <button onclick="openLogoutModal()" class="btn-logout-trigger">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
     </div>
 </div>
 
 <div id="logoutModal" class="modal-overlay">
     <div class="modal-box">
         <div class="modal-icon-wrapper">
-            <i class="fa-solid fa-right-from-bracket"></i>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </div>
         
-        <h3 class="modal-title">Confirm Logout</h3>
-        <p class="modal-text">Are you sure you want to end your session?</p>
+        <h3 class="modal-title">Signing Out?</h3>
+        <p class="modal-text">You will need to log in again to access the admin portal.</p>
         
         <div class="modal-buttons">
             <button onclick="closeLogoutModal()" class="btn-cancel">Cancel</button>

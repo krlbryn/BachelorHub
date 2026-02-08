@@ -1,0 +1,394 @@
+/* Document   : studentHeader.css
+   Description: Premium Student Header with Notif & Help Center Dropdowns
+*/
+
+/* --- TOP NAVBAR STYLING (Floating Card Style) --- */
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFFFFF;
+    
+    /* FIX: Standard Admin Padding and Floating Margin */
+    padding: 15px 30px;
+    margin: 20px 40px 10px 40px; 
+    
+    /* FIX: iVOTE Standard Radius and Soft Shadow */
+    border-radius: 16px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03); 
+    
+    position: relative;
+    z-index: 1000; /* Ensure dropdowns float over content */
+}
+
+/* Search Bar Wrapper (Pill Shape) */
+.search-wrapper {
+    position: relative;
+    width: 380px;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 12px 20px 12px 50px;
+    border-radius: 30px; 
+    border: 1px solid #E8EEF3;
+    background: #F9FBFD;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #1a1a3d;
+    transition: all 0.3s ease;
+}
+
+.search-wrapper input:focus {
+    outline: none;
+    background: #FFFFFF;
+    border-color: #1E56A0;
+    box-shadow: 0 4px 15px rgba(30, 86, 160, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8A92A6;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+/* --- RIGHT SECTION: ICONS & DROPDOWNS --- */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Icon Container for Dropdown Anchoring */
+.icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.header-icon-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.icon-btn {
+    position: relative;
+    color: #5F6D7E;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.icon-btn:hover {
+    color: #1E56A0;
+    background: #F4F7FE;
+    transform: translateY(-2px);
+}
+
+/* Notification Badge Styling */
+.badge-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 9px;
+    height: 9px;
+    background-color: #EB5757;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+}
+
+/* --- DROPDOWN MENUS (Shared Logic) --- */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 300px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: 1px solid #E8EEF3;
+    z-index: 1100;
+    overflow: hidden;
+    animation: slideDown 0.2s ease-out;
+}
+
+.dropdown-menu.show { display: block; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header {
+    padding: 15px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A92A6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #F9FBFD;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #1a1a3d;
+    font-size: 13px;
+    border-bottom: 1px solid #F4F7FE;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #F4F7FE;
+    color: #1E56A0;
+}
+
+/* Specific styling for Notification items */
+.notif-item { gap: 15px; }
+.notif-icon {
+    width: 34px; height: 34px;
+    background: #E3F2FD;
+    color: #1E56A0;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.notif-icon.warning { background: #FFF8E1; color: #FFA000; }
+.notif-text { font-size: 12px; line-height: 1.4; color: #5F6D7E; }
+
+/* --- PROFILE CONTAINER --- */
+.header-divider {
+    width: 1px;
+    height: 30px;
+    background: #E8EEF3;
+    margin: 0 5px;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.profile-container:hover { background: #F4F7FE; }
+
+.header-avatar, .avatar-fallback {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #F4F7FE;
+}
+
+.avatar-fallback {
+    background: #E3F2FD;
+    color: #1E56A0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a1a3d;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.user-role {
+    font-size: 11px;
+    color: #8A92A6;
+    font-weight: 500;
+}
+
+.logout-text { color: #EB5757 !important; }
+
+/* Modal Background Overlay */
+.modal-overlay {
+    display: none; /* Controlled by JavaScript */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(26, 26, 61, 0.6); /* Deep navy tint */
+    backdrop-filter: blur(5px); /* Premium blur effect */
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Modal Content Box */
+.modal-box {
+    background: #FFFFFF;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px; /* Standard iVOTE radius */
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-box.large {
+    max-width: 650px;
+}
+
+@keyframes modalPopIn {
+    from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Modal Header */
+.modal-header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.modal-header-main h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    color: #1E56A0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.close-modal {
+    font-size: 28px;
+    color: #8A92A6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.close-modal:hover { color: #EB5757; }
+
+/* Guideline Card Content */
+.guideline-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.guide-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #F8F9FC;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #EDF2F7;
+    transition: 0.3s;
+}
+
+.guide-item:hover { border-color: #1E56A0; background: #F4F7FE; }
+
+.guide-item i {
+    width: 30px;
+    height: 30px;
+    background: #E3F2FD;
+    color: #1E56A0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Support Form Elements */
+.form-group-modal {
+    margin-bottom: 20px;
+}
+
+.form-group-modal label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1a1a3d;
+    margin-bottom: 8px;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    background: #F9FBFD;
+    transition: 0.3s;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #1E56A0;
+    background: #FFF;
+    box-shadow: 0 0 0 4px rgba(30, 86, 160, 0.08);
+}
+
+/* Footer Buttons */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #1E56A0 0%, #4A90E2 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-confirm:hover { box-shadow: 0 8px 20px rgba(30, 86, 160, 0.3); transform: translateY(-2px); }
+
+.btn-cancel {
+    background: #F4F7FE;
+    color: #1E56A0;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+}

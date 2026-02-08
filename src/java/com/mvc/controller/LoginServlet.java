@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// This annotation maps the URL from your JSP form (action="LoginServlet")
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
@@ -26,27 +25,31 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String usernameEntered = request.getParameter("username");
+        // 1. CAPTURE INPUT
+        // If Student: 'username' parameter contains the Student ID (e.g., "2025123456")
+        // If Admin: 'username' parameter contains Admin Name (e.g., "admin")
+        String usernameEntered = request.getParameter("username"); 
         String passwordEntered = request.getParameter("password");
-
-        // 1. GET THE HIDDEN ROLE FROM JSP
         String role = request.getParameter("role");
 
         LoginBean loginBean = new LoginBean();
-        loginBean.setUsername(usernameEntered);
+        loginBean.setUsername(usernameEntered); // Sets the ID/Name into the bean
         loginBean.setPassword(passwordEntered);
 
         LoginDao loginDao = new LoginDao();
 
-        // 2. PASS THE ROLE TO DAO
+        // 2. AUTHENTICATE
+        // The DAO will now use the correct SQL column (stud_ID vs username) based on 'role'
         String result = loginDao.authenticateUser(loginBean, role);
 
         if (result.equals("SUCCESS")) {
             HttpSession session = request.getSession();
-            session.setAttribute("userSession", usernameEntered);
+            
+            // IMPORTANT: storing the Student ID in session allows you to identify them later
+            session.setAttribute("userSession", usernameEntered); 
             session.setAttribute("userRole", role);
 
-            // 3. REDIRECT BASED ON ROLE
+            // 3. REDIRECT
             if (role.equals("admin")) {
                 request.getRequestDispatcher("/adminDashboard.jsp").forward(request, response);
             } else {
@@ -55,7 +58,7 @@ public class LoginServlet extends HttpServlet {
 
         } else {
             request.setAttribute("errMessage", result);
-            // If login fails, keep them on the correct page type!
+            // Redirect back to login with the correct tab selected
             if (role.equals("admin")) {
                 request.getRequestDispatcher("/login.jsp?type=admin").forward(request, response);
             } else {

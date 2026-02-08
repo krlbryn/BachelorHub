@@ -4,6 +4,7 @@
     Author     : Karl
 --%>
 
+
 <%@page import="java.sql.*"%>
 <%@page import="com.mvc.util.DBConnection"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -17,7 +18,7 @@
     
     // 2. Get Parameters
     String eid = request.getParameter("eid"); // Election ID
-    String msg = request.getParameter("msg"); // Messages (success/error)
+    String msg = request.getParameter("msg"); // Messages
     String currentElectionName = "Select an Election";
     
     // 3. Fetch Election Name for display
@@ -36,19 +37,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Candidates</title>
+    <title>Manage Candidates | ElectVote Admin</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/adminDashboard.css">
     
     <style>
-        /* Local overrides for specific layout needs */
-        .action-bar { margin-top: 25px; margin-bottom: 20px; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 500px; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+        /* --- iVOTE THEME VARIABLES --- */
+        :root {
+            --ev-primary: #1E56A0;
+            --ev-secondary: #4A90E2;
+            --ev-bg: #F4F7FE;
+            --ev-card: #FFFFFF;
+            --ev-text: #1a1a3d;
+            --ev-muted: #8A92A6;
+            --ev-success: #00c853;
+            --ev-danger: #ff1744;
+            --ev-warning: #ffc107;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--ev-bg);
+            color: var(--ev-text);
+            padding-left: 260px; 
+            margin: 0;
+        }
+
+        .main-content { padding: 30px 40px; }
+
+        /* --- HEADER & FILTER BAR --- */
+        .page-header { margin-bottom: 25px; }
+        .header-title { font-size: 24px; font-weight: 700; color: var(--ev-primary); margin: 0 0 5px; }
+        
+        /* Filter Card */
+        .filter-card {
+            background: var(--ev-card);
+            padding: 20px 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border: 1px solid #E8EEF3;
+        }
+
+        .filter-group { display: flex; align-items: center; gap: 15px; flex-grow: 1; }
+        .filter-label { font-weight: 600; color: var(--ev-text); font-size: 14px; }
+        
+        .election-select {
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 2px solid #E8EEF3;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #1a1a3d;
+            width: 300px;
+            background-color: #F9FBFD;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .election-select:focus { outline: none; border-color: var(--ev-primary); background: white; }
+
+        .btn-create {
+            background: linear-gradient(135deg, var(--ev-primary), var(--ev-secondary));
+            color: white; padding: 10px 25px; border: none; border-radius: 10px;
+            font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(30, 86, 160, 0.3);
+            display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 14px;
+        }
+        .btn-create:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 86, 160, 0.4); }
+
+        /* --- TABLE STYLING --- */
+        .table-container { background: var(--ev-card); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); overflow: hidden; }
+        .election-table { width: 100%; border-collapse: collapse; }
+        .election-table th { background: #FAFBFF; text-align: left; padding: 18px 25px; font-weight: 600; color: var(--ev-muted); font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #E8EEF3; }
+        .election-table td { padding: 20px 25px; border-bottom: 1px solid #E8EEF3; vertical-align: middle; color: var(--ev-text); font-size: 14px; }
+        .election-table tr:hover { background-color: #F8F9FC; }
+        
+        .candidate-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #E8EEF3; }
+        .candidate-info { display: flex; flex-direction: column; }
+        .cand-name { font-weight: 600; color: #1a1a3d; }
+        .cand-id { font-size: 12px; color: #8A92A6; }
+
+        /* Badges */
+        .position-badge { 
+            background: rgba(74, 144, 226, 0.1); color: var(--ev-secondary); 
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+        }
+
+        /* Buttons */
+        .btn-delete { 
+            width: 35px; height: 35px; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
+            background: rgba(255, 23, 68, 0.1); color: var(--ev-danger); 
+            text-decoration: none; transition: 0.2s; 
+        }
+        .btn-delete:hover { background: var(--ev-danger); color: white; }
+
+        /* Alerts */
+        .alert-box { padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; }
+        .alert-success { background: rgba(0, 200, 83, 0.1); color: #00c853; border-left: 4px solid #00c853; }
+        .alert-danger { background: rgba(255, 23, 68, 0.1); color: #ff1744; border-left: 4px solid #ff1744; }
+        .alert-warning { background: rgba(255, 193, 7, 0.1); color: #f9a825; border-left: 4px solid #ffc107; }
+
+        /* --- MODAL --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 26, 61, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 35px; border-radius: 20px; width: 500px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: var(--ev-primary); margin: 0; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ev-muted); }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--ev-text); }
+        .form-control { width: 100%; padding: 12px; border: 2px solid #E8EEF3; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; box-sizing: border-box; }
+        .form-control:focus { outline: none; border-color: var(--ev-primary); background: #F9FBFD; }
+
+        .modal-footer { display: flex; gap: 15px; margin-top: 30px; justify-content: flex-end; }
+        .btn-save { background: var(--ev-primary); color: white; padding: 12px 30px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .btn-cancel-red { background: #F4F7FE; color: var(--ev-muted); padding: 12px 25px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .file-upload-box { padding: 9px; background: white; }
+        
+        /* Empty State */
+        .empty-state { text-align: center; padding: 60px; color: var(--ev-muted); }
+        .empty-icon { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -57,132 +173,125 @@
 
     <main class="main-content">
 
-        <div class="top-header">
+        <jsp:include page="adminHeader.jsp" />
+
+        <div class="page-header">
             <h1 class="header-title">Manage Candidates</h1>
-            <div class="header-info">
-                <a href="adminElection.jsp" style="text-decoration:none; color:#007bff;">Elections</a> 
-                <span style="color:#ccc; margin:0 5px;">/</span> 
-                Candidate Registry
-            </div>
+            <div style="color: #8A92A6; font-size: 14px;">Register and manage candidates for: <strong style="color: var(--ev-primary);"><%= currentElectionName %></strong></div>
         </div>
 
-        <div class="action-bar">
-            <div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
-                
-                <div style="flex-grow: 1; margin-right: 20px;">
-                    <label style="display:block; font-weight:bold; color:#555; margin-bottom:5px;">Select Election:</label>
-                    <select class="election-select form-control" onchange="window.location.href='adminViewCandidates.jsp?eid='+this.value">
-                        <option value="" disabled <%= (eid == null) ? "selected" : "" %>>-- Choose Election --</option>
-                        <%
-                            try {
-                                Connection conH = DBConnection.createConnection();
-                                String sqlH = "SELECT election_ID, election_Title FROM election ORDER BY election_ID DESC";
-                                ResultSet rsH = conH.createStatement().executeQuery(sqlH);
-                                while(rsH.next()) {
-                                    String id = rsH.getString("election_ID");
-                                    String title = rsH.getString("election_Title");
-                                    String sel = (id.equals(eid)) ? "selected" : "";
-                        %>
-                                <option value="<%= id %>" <%= sel %>><%= title %></option>
-                        <%
-                                }
-                                conH.close();
-                            } catch(Exception e) {}
-                        %>
-                    </select>
-                </div>
-
-                <% if(eid != null && !eid.isEmpty()) { %>
-                    <button onclick="openModal()" class="btn-create" style="height: 45px; margin-top: 20px;">
-                        <i class="fa-solid fa-user-plus"></i> Add Candidate
-                    </button>
-                <% } %>
-            </div>
-        </div>
-
-       <% if("success".equals(msg)) { %>
-        <div style="padding:15px; background:#d4edda; color:#155724; border-radius:5px; margin-bottom:20px;">
-            <i class="fa-solid fa-check-circle"></i> Candidate registered successfully!
-        </div>
-
-    <% } else if("deleted".equals(msg)) { %>
-        <div style="padding:15px; background:#f8d7da; color:#721c24; border-radius:5px; margin-bottom:20px;">
-            <i class="fa-solid fa-trash-can"></i> Candidate removed successfully.
-        </div>
-    <% } else if("duplicate".equals(msg)) { %>
-        <div style="padding:15px; background:#fff3cd; color:#856404; border-radius:5px; margin-bottom:20px;">
-            Error: This student is already a candidate.
-        </div>
-    <% } else if("notfound".equals(msg)) { %>
-        <div style="padding:15px; background:#f8d7da; color:#721c24; border-radius:5px; margin-bottom:20px;">
-            Error: Student ID not found.
-        </div>
-    <% } else if("error".equals(msg)) { %>
-        <div style="padding:15px; background:#f8d7da; color:#721c24; border-radius:5px; margin-bottom:20px;">
-            Error: Database operation failed.
-        </div>
-    <% } %>
-
-        <% if(eid != null && !eid.isEmpty()) { %>
-            <h3 style="margin-bottom:15px; color:#444;">List for: <span style="color:#0056b3;"><%= currentElectionName %></span></h3>
-            
-            <table class="election-table">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">Photo</th>
-                        <th style="width: 25%;">Student Info</th>
-                        <th style="width: 20%;">Position</th>
-                        <th style="width: 35%;">Manifesto</th>
-                        <th style="width: 10%;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="filter-card">
+            <div class="filter-group">
+                <span class="filter-label">Select Election:</span>
+                <select class="election-select" onchange="window.location.href='adminViewCandidates.jsp?eid='+this.value">
+                    <option value="" disabled <%= (eid == null) ? "selected" : "" %>>-- Choose Election --</option>
                     <%
                         try {
-                            Connection con = DBConnection.createConnection();
-                            // QUERY: Join Candidate and Student tables. Filter by election_ID.
-                            String sql = "SELECT c.cand_ID, c.cand_ManifestoDesc, c.cand_PhotoPath, c.candidate_Position, s.stu_Name, s.stud_ID " +
-                                         "FROM candidate c " +
-                                         "JOIN student s ON c.stud_ID = s.stud_ID " +
-                                         "WHERE c.election_ID = ? " + 
-                                         "ORDER BY c.candidate_Position";
-                                         
-                            PreparedStatement ps = con.prepareStatement(sql);
-                            ps.setString(1, eid);
-                            ResultSet rs = ps.executeQuery();
-                            
-                            boolean hasData = false;
-                            while(rs.next()) {
-                                hasData = true;
-                                String cImg = rs.getString("cand_PhotoPath");
-                                if(cImg == null || cImg.isEmpty()) cImg = "default_user.png";
+                            Connection conH = DBConnection.createConnection();
+                            String sqlH = "SELECT election_ID, election_Title FROM election ORDER BY election_ID DESC";
+                            ResultSet rsH = conH.createStatement().executeQuery(sqlH);
+                            while(rsH.next()) {
+                                String id = rsH.getString("election_ID");
+                                String title = rsH.getString("election_Title");
+                                String sel = (id.equals(eid)) ? "selected" : "";
                     %>
-                    <tr>
-                        <td><img src="images/<%= cImg %>" class="candidate-img"></td>
-                        <td>
-                            <strong><%= rs.getString("stu_Name") %></strong><br>
-                            <span style="color:#666; font-size:0.85rem;"><%= rs.getString("stud_ID") %></span>
-                        </td>
-                        <td><span class="status active" style="background:#e2e6ea; color:#333;"><%= rs.getString("candidate_Position") %></span></td>
-                        <td><em style="color:#555;"><%= rs.getString("cand_ManifestoDesc") %></em></td>
-                        <td>
-                            <a href="AdminCandidateDeleteServlet?cid=<%= rs.getString("cand_ID") %>&eid=<%= eid %>" 
-                               class="btn-delete" style="color:#dc3545;" 
-                               onclick="return confirm('Are you sure you want to remove this candidate?')"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
+                        <option value="<%= id %>" <%= sel %>><%= title %></option>
                     <%
                             }
-                            if(!hasData) { out.print("<tr><td colspan='5' style='text-align:center; padding:30px; color:#999;'>No candidates found for this election.</td></tr>"); }
-                            con.close();
-                        } catch (Exception e) { e.printStackTrace(); }
+                            conH.close();
+                        } catch(Exception e) {}
                     %>
-                </tbody>
-            </table>
+                </select>
+            </div>
+
+            <% if(eid != null && !eid.isEmpty()) { %>
+                <button onclick="openModal()" class="btn-create">
+                    <i class="fa-solid fa-user-plus"></i> Add Candidate
+                </button>
+            <% } %>
+        </div>
+
+        <% if("success".equals(msg)) { %>
+            <div class="alert-box alert-success"><i class="fa-solid fa-check-circle"></i> Candidate registered successfully!</div>
+        <% } else if("deleted".equals(msg)) { %>
+            <div class="alert-box alert-danger"><i class="fa-solid fa-trash-can"></i> Candidate removed successfully.</div>
+        <% } else if("duplicate".equals(msg)) { %>
+            <div class="alert-box alert-warning"><i class="fa-solid fa-triangle-exclamation"></i> Error: This student is already a candidate.</div>
+        <% } else if("notfound".equals(msg)) { %>
+            <div class="alert-box alert-danger"><i class="fa-solid fa-circle-xmark"></i> Error: Student ID not found in database.</div>
+        <% } else if("error".equals(msg)) { %>
+            <div class="alert-box alert-danger"><i class="fa-solid fa-circle-xmark"></i> Error: Database operation failed.</div>
+        <% } %>
+
+        <% if(eid != null && !eid.isEmpty()) { %>
+            <div class="table-container">
+                <table class="election-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">Photo</th>
+                            <th style="width: 25%;">Candidate Info</th>
+                            <th style="width: 20%;">Position</th>
+                            <th style="width: 35%;">Manifesto</th>
+                            <th style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            try {
+                                Connection con = DBConnection.createConnection();
+                                String sql = "SELECT c.cand_ID, c.cand_ManifestoDesc, c.cand_PhotoPath, c.candidate_Position, s.stu_Name, s.stud_ID " +
+                                             "FROM candidate c " +
+                                             "JOIN student s ON c.stud_ID = s.stud_ID " +
+                                             "WHERE c.election_ID = ? " + 
+                                             "ORDER BY c.candidate_Position";
+                                             
+                                PreparedStatement ps = con.prepareStatement(sql);
+                                ps.setString(1, eid);
+                                ResultSet rs = ps.executeQuery();
+                                
+                                boolean hasData = false;
+                                while(rs.next()) {
+                                    hasData = true;
+                                    String cImg = rs.getString("cand_PhotoPath");
+                                    if(cImg == null || cImg.isEmpty()) cImg = "default_user.png";
+                        %>
+                        <tr>
+                            <td><img src="images/<%= cImg %>" class="candidate-img"></td>
+                            <td>
+                                <div class="candidate-info">
+                                    <span class="cand-name"><%= rs.getString("stu_Name") %></span>
+                                    <span class="cand-id"><%= rs.getString("stud_ID") %></span>
+                                </div>
+                            </td>
+                            <td><span class="position-badge"><%= rs.getString("candidate_Position") %></span></td>
+                            <td><div style="font-size: 13px; color: #5F6D7E; font-style: italic;">"<%= rs.getString("cand_ManifestoDesc") %>"</div></td>
+                            <td>
+                                <a href="AdminCandidateDeleteServlet?cid=<%= rs.getString("cand_ID") %>&eid=<%= eid %>" 
+                                   class="btn-delete" 
+                                   onclick="return confirm('Are you sure you want to remove this candidate?')" 
+                                   title="Remove Candidate">
+                                   <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <%
+                                }
+                                if(!hasData) {
+                        %>
+                            <tr><td colspan="5" style="text-align:center; padding:40px; color:#8A92A6;">No candidates registered yet.</td></tr>
+                        <%
+                                }
+                                con.close();
+                            } catch (Exception e) { e.printStackTrace(); }
+                        %>
+                    </tbody>
+                </table>
+            </div>
         <% } else { %>
-            <div style="text-align:center; padding:60px; background:#fff; border-radius:8px; color:#aaa;">
-                <i class="fa-solid fa-arrow-up" style="font-size:2rem; margin-bottom:15px;"></i>
-                <p>Please select an election from the list above.</p>
+            <div class="table-container empty-state">
+                <i class="fa-solid fa-check-to-slot empty-icon"></i>
+                <h3>Select an election to view candidates</h3>
+                <p>Use the dropdown menu above to choose an election.</p>
             </div>
         <% } %>
 
@@ -190,75 +299,60 @@
 
     <div id="addModal" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title" style="margin-bottom:20px; text-align:center;">Register Candidate</h2>
+            <div class="modal-header">
+                <h2 class="modal-title">Register Candidate</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
             
             <form action="AdminCandidateAddServlet" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="eid" value="<%= eid %>">
                 
                 <div class="form-group">
-                    <label>Student ID (Matric No)</label>
-                    <input type="text" name="studID" class="form-control" placeholder="Ex: 2025164721" required>
+                    <label>Student Matric No</label>
+                    <input type="text" name="studID" class="form-control" placeholder="e.g., 2025123456" required>
                 </div>
 
-              <div class="form-group">
-    <label>Position</label>
-    <select name="positionName" class="form-control" required>
-        <option value="" disabled selected>-- Select Position --</option>
-        <%
-            // 1. Get the current Election ID (eid) being viewed
-            String currentEid = request.getParameter("eid");
-
-            if(currentEid != null && !currentEid.isEmpty()) {
-                Connection conPos = null;
-                try {
-                    conPos = DBConnection.createConnection();
-                    
-                    // 2. QUERY: Fetch positions ONLY for this specific election
-                    String sqlPos = "SELECT position_Name FROM position WHERE election_ID = ?";
-                    PreparedStatement psPos = conPos.prepareStatement(sqlPos);
-                    psPos.setString(1, currentEid);
-                    
-                    ResultSet rsPos = psPos.executeQuery();
-                    
-                    boolean found = false;
-                    while(rsPos.next()) {
-                        found = true;
-                        String pName = rsPos.getString("position_Name");
-        %>
-                        <option value="<%= pName %>"><%= pName %></option>
-        <%
-                    }
-                    
-                    // 3. Fallback: If no positions found in DB, show a default (Safety Net)
-                    if(!found) {
-        %>
-                        <option value="" disabled>No positions found for Election ID <%= currentEid %></option>
-        <%
-                    }
-                    
-                } catch(Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if(conPos != null) conPos.close();
-                }
-            }
-        %>
-    </select>
-</div>
+                <div class="form-group">
+                    <label>Running For</label>
+                    <select name="positionName" class="form-control" required>
+                        <option value="" disabled selected>-- Select Position --</option>
+                        <%
+                            if(eid != null && !eid.isEmpty()) {
+                                try {
+                                    Connection conPos = DBConnection.createConnection();
+                                    String sqlPos = "SELECT position_Name FROM position WHERE election_ID = ?";
+                                    PreparedStatement psPos = conPos.prepareStatement(sqlPos);
+                                    psPos.setString(1, eid);
+                                    ResultSet rsPos = psPos.executeQuery();
+                                    boolean found = false;
+                                    while(rsPos.next()) {
+                                        found = true;
+                                        String pName = rsPos.getString("position_Name");
+                        %>
+                                <option value="<%= pName %>"><%= pName %></option>
+                        <%
+                                    }
+                                    if(!found) { out.print("<option disabled>No positions found for this election</option>"); }
+                                    conPos.close();
+                                } catch(Exception e) {}
+                            }
+                        %>
+                    </select>
+                </div>
 
                 <div class="form-group">
-                    <label>Manifesto</label>
-                    <textarea name="cManifesto" class="form-control" rows="3" placeholder="Campaign slogan..."></textarea>
+                    <label>Manifesto / Slogan</label>
+                    <textarea name="cManifesto" class="form-control" rows="3" placeholder="Campaign promise..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Photo</label>
-                    <input type="file" name="cImage" class="form-control">
+                    <label>Candidate Photo</label>
+                    <input type="file" name="cImage" class="form-control file-upload-box">
                 </div>
 
-                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-                    <button type="submit" class="btn-create">Register</button>
-                    <button type="button" onclick="closeModal()" class="btn-create" style="background:#dc3545;">Cancel</button>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal()" class="btn-cancel-red">Cancel</button>
+                    <button type="submit" class="btn-save">Register Candidate</button>
                 </div>
             </form>
         </div>
@@ -267,7 +361,10 @@
     <script>
         function openModal() { document.getElementById('addModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('addModal').style.display = 'none'; }
-        window.onclick = function(e) { if(e.target == document.getElementById('addModal')) closeModal(); }
+        
+        window.onclick = function(e) { 
+            if(e.target == document.getElementById('addModal')) closeModal(); 
+        }
     </script>
 </body>
 </html>

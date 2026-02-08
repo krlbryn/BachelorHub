@@ -1,110 +1,131 @@
 <%-- 
     Document   : login
     Created on : 19 Jan 2026, 4:59:58 pm
-    Author     : ParaNon
+    Author     : Karl
 --%>
 
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    // 1. Determine Mode (Admin vs Student)
+    // Original Functionality & Security logic
     String type = request.getParameter("type");
-    boolean isAdmin = "admin".equals(type);
-
-    String roleValue = isAdmin ? "admin" : "student";
-    String pageTitle = isAdmin ? "Admin Login" : "Student Login";
-    String labelText = isAdmin ? "Username" : "Student Username";
-    String placeholderText = isAdmin ? "Enter Admin Username" : "Enter Student Username";
-
-    String toggleLink = isAdmin ? "login.jsp" : "login.jsp?type=admin";
-    String toggleText = isAdmin ? "Not an admin? Click Here" : "An admin? Click here";
-
-    // 2. Check for Error Message
+    boolean isAdminInit = "admin".equals(type);
     String errorMessage = (String) request.getAttribute("errMessage");
     boolean hasError = (errorMessage != null && !errorMessage.isEmpty());
 
-    // Prevent caching
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 %>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Online Student Election - <%= pageTitle%></title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ElectVote Portal</title>
+    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ElectVoteTheme.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="ivote-bg">
 
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/login.css">
-    </head>
-    <body>
-
-        <header>
-            <h1>Online Student Election</h1>
-        </header>
-
-        <main>
-            <div class="login-card">
-                <h2><%= pageTitle%></h2>
-
-                <form action="LoginServlet" method="post">
-                    <input type="hidden" name="role" value="<%= roleValue%>">
-
-                    <div class="input-group">
-                        <label for="username"><%= labelText%></label>
-                        <input type="text" id="username" name="username" required placeholder="<%= placeholderText%>">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter password" style="padding-right: 40px;">
-                        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
-                    </div>
-
-                    <button type="submit" class="login-btn">Log In</button>
-
-                    <div class="signup-text">
-                        <a href="<%= toggleLink%>" style="font-weight: bold;"><%= toggleText%></a>
-                    </div>
-                </form>
-            </div>
-
-            <div class="footer-line"></div>
-        </main>
-
-        <div id="errorModal" class="modal-overlay">
-            <div class="modal-box">
-                <i class="fa-solid fa-circle-xmark" style="color: #d9534f; font-size: 50px; margin-bottom: 15px;"></i>
-                <h3 class="modal-title">Login Failed</h3>
-                <p class="modal-text"><%= (errorMessage != null) ? errorMessage : ""%></p>
-                <button class="btn-close" onclick="closeErrorModal()">Try Again</button>
+    <header class="top-branding-header">
+        <div class="nav-container">
+            <a href="index.jsp" class="logo" style="text-decoration: none; color: white;">
+                <i class="fa-solid fa-check-to-slot"></i> ElectVote
+            </a>
+            <div class="nav-actions">
+                <a href="index.jsp" class="btn-back-home">
+                    <i class="fa-solid fa-house"></i> Back to Home
+                </a>
             </div>
         </div>
+        
+        <div class="header-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path fill="#ffffff" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+            </svg>
+        </div>
+    </header>
 
-        <script>
-            // Password Toggle Script
-            const togglePassword = document.querySelector('#togglePassword');
-            const password = document.querySelector('#password');
+    <div class="login-wrapper">
+        <div class="login-card ev-card">
+            <div class="brand-logo">
+                <i class="fa-solid fa-check-to-slot"></i>
+            </div>
+            
+            <h1 class="login-title">ElectVote</h1>
+            <p class="login-subtitle">Student Election Management Portal</p>
 
-            togglePassword.addEventListener('click', function (e) {
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-                this.classList.toggle('fa-eye');
-                this.classList.toggle('fa-eye-slash');
-            });
+            <form action="LoginServlet" method="post">
+                <div class="role-selection">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="admin" <%= isAdminInit ? "checked" : "" %> onclick="updateLabel('Admin Username', 'Enter Admin Username')">
+                        <div class="role-box">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>Admin</span>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="student" <%= !isAdminInit ? "checked" : "" %> onclick="updateLabel('Student ID', 'Enter Student Username')">
+                        <div class="role-box">
+                            <i class="fa-solid fa-user-graduate"></i>
+                            <span>Student</span>
+                        </div>
+                    </label>
+                </div>
 
-            // Error Modal Script
-            function closeErrorModal() {
-                document.getElementById('errorModal').style.display = 'none';
-            }
+                <div class="form-group">
+                    <label id="idLabel"><%= isAdminInit ? "Admin Username" : "Student ID" %></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <input type="text" name="username" class="form-control-ev" 
+                               placeholder="<%= isAdminInit ? "Enter Admin Username" : "Enter Student Username" %>" required>
+                    </div>
+                </div>
 
-            // Auto-open modal if Java says there is an error
-            <% if (hasError) { %>
-            document.getElementById('errorModal').style.display = 'flex';
-            <% }%>
-        </script>
+                <div class="form-group">
+                    <label>Security Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" id="password" class="form-control-ev" placeholder="Enter security password" required>
+                        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+                </div>
 
-    </body>
+                <button type="submit" class="ev-btn-primary" style="width: 100%; margin-top: 10px; border: none; cursor: pointer;">
+                    Sign In to Portal
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="errorModal" class="modal-overlay" style="<%= hasError ? "display: flex;" : "display: none;" %>">
+        <div class="modal-box">
+            <i class="fa-solid fa-circle-xmark" style="color: #EB5757; font-size: 50px; margin-bottom: 15px;"></i>
+            <h3 class="modal-title">Authentication Failed</h3>
+            <p class="modal-text"><%= (errorMessage != null) ? errorMessage : "" %></p>
+            <button class="ev-btn-primary" onclick="closeErrorModal()" style="border: none; padding: 10px 25px;">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        function updateLabel(text, placeholder) {
+            document.getElementById('idLabel').innerText = text;
+            document.getElementsByName('username')[0].placeholder = placeholder;
+        }
+
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordField = document.querySelector('#password');
+        togglePassword.addEventListener('click', function () {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        function closeErrorModal() { document.getElementById('errorModal').style.display = 'none'; }
+    </script>
+</body>
 </html>
